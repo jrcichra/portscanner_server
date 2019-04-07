@@ -4,6 +4,7 @@ import json
 import itertools as it
 
 server_port = 5555
+server_ip = '144.217.81.98'
 
 
 def scan_port(client_address, port):
@@ -21,7 +22,7 @@ def check_client(client_socket, client_address):
     o = {}
     o['ip'] = client_address
     o['open'] = []
-    if client_address == '144.217.81.98':  # this is to prevent a chain reaction
+    if client_address == server_ip:  # this is to prevent a chain reaction
         for port in it.chain(range(1, server_port), range(server_port+1, 65536)):
             res = scan_port(client_address, port)
             if(res):
