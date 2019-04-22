@@ -16,7 +16,7 @@ def signal_handler(sig, frame):
 
 def scan_port(client_address, port):
     check_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    check_socket.settimeout(.001)
+    check_socket.settimeout(.01)
     res = check_socket.connect_ex((client_address, port))
     check_socket.close()
     if(res == 0):
@@ -30,13 +30,14 @@ def check_client(client_socket, client_address):
     o['ip'] = client_address
     o['open'] = []
     for port in range(1, 65536):
-        status = '\rscanning port: ' + str(port)
+        status = '\r\033[Kscanning port: ' + str(port)
         client_socket.sendall(status.encode())
         res = scan_port(client_address, port)
         if(res):
-            found = '\n open: ' + str(port) + '\n'
+            found = '\r\033[Kopen: ' + str(port) + '\n'
             client_socket.sendall(found.encode())
-
+    done = '\r\033[K\n'
+    client_socket.sendall(done.encode())
     client_socket.close()
 
 
